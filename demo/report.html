@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>金融数据稽核报告</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f4f6f9; color: #2b2b2b;
+         font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px; }
+  header { border-bottom: 3px solid #2F4858; padding-bottom: 16px; margin-bottom: 24px; }
+  h1 { margin: 0 0 6px; font-size: 26px; color: #2F4858; }
+  .sub { color: #7a8794; font-size: 13px; }
+  .cards { display: flex; gap: 16px; flex-wrap: wrap; margin: 20px 0 8px; }
+  .card { flex: 1 1 160px; background: #fff; border-radius: 10px; padding: 18px 20px;
+           box-shadow: 0 1px 4px rgba(0,0,0,.06); border-top: 4px solid #2F4858; }
+  .card .label { font-size: 13px; color: #7a8794; }
+  .card .value { font-size: 30px; font-weight: 700; margin-top: 6px; color: #2F4858; }
+  .card.ok { border-top-color: #2e9e5b; }
+  .card.ok .value { color: #2e9e5b; }
+  .card.bad { border-top-color: #C03A2B; }
+  .card.bad .value { color: #C03A2B; }
+  .status { display: inline-block; padding: 4px 14px; border-radius: 999px;
+             font-size: 13px; font-weight: 600; color: #fff; }
+  .status.ok { background: #2e9e5b; }
+  .status.bad { background: #C03A2B; }
+  h2 { font-size: 18px; color: #2F4858; margin: 32px 0 12px; }
+  .meta { font-size: 13px; color: #55636f; background:#fff; border-radius:10px;
+           padding: 14px 18px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .meta div { margin: 3px 0; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px;
+           overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.06); font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #eef1f4; }
+  th { background: #2F4858; color: #fff; font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.mono { font-family: Consolas, "Courier New", monospace; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 999px;
+           font-size: 12px; font-weight: 600; color: #fff; }
+  .pill.pass { background: #2e9e5b; }
+  .pill.fail { background: #C03A2B; }
+  .empty { text-align: center; color: #9aa6b2; padding: 24px; }
+  footer { margin-top: 28px; color: #9aa6b2; font-size: 12px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>金融数据稽核报告</h1>
+    <div class="sub">fin-audit · 生成时间 2026-10-14 12:25:49 · <span class="status bad">存在差异</span></div>
+  </header>
+
+  <div class="cards">
+    <div class="card"><div class="label">规则总数</div><div class="value">7</div></div>
+    <div class="card ok"><div class="label">通过</div><div class="value">1</div></div>
+    <div class="card bad"><div class="label">失败</div><div class="value">6</div></div>
+    <div class="card bad"><div class="label">差异总条数</div><div class="value">9</div></div>
+  </div>
+
+  <div class="meta">
+    <div><b>源数据：</b>examples\source.csv（9 行）</div>
+    <div><b>目标/报送数据：</b>examples\target.csv（7 行）</div>
+  </div>
+
+  <h2>一、规则执行汇总</h2>
+  <table>
+    <thead><tr><th>#</th><th>规则名</th><th>类型</th><th>结果</th><th>差异条数</th><th>说明</th></tr></thead>
+    <tbody>
+<tr><td>1</td><td>记录数核对</td><td>record_count</td><td><span class="pill fail">失败</span></td><td class='num'>1</td><td>源 9 行 / 目标 7 行</td></tr>
+<tr><td>2</td><td>主键唯一</td><td>key_unique</td><td><span class="pill fail">失败</span></td><td class='num'>1</td><td>共 8 个唯一主键，重复 1 个</td></tr>
+<tr><td>3</td><td>非空校验</td><td>not_null</td><td><span class="pill fail">失败</span></td><td class='num'>1</td><td>校验 3 个必填字段，空值 1 个</td></tr>
+<tr><td>4</td><td>值域-币种</td><td>value_range</td><td><span class="pill pass">通过</span></td><td class='num'>0</td><td>currency 允许集合 [&#x27;CNY&#x27;, &#x27;USD&#x27;, &#x27;HKD&#x27;]，越界 0 条</td></tr>
+<tr><td>5</td><td>值域-账户状态</td><td>value_range</td><td><span class="pill fail">失败</span></td><td class='num'>1</td><td>status 允许集合 [&#x27;正常&#x27;, &#x27;冻结&#x27;, &#x27;销户&#x27;]，越界 1 条</td></tr>
+<tr><td>6</td><td>金额勾稽-期末余额</td><td>reconcile</td><td><span class="pill fail">失败</span></td><td class='num'>1</td><td>逐行勾稽 ending_balance = beginning_balance + income - expense，不平 1 条</td></tr>
+<tr><td>7</td><td>字段差异比对</td><td>field_diff</td><td><span class="pill fail">失败</span></td><td class='num'>4</td><td>比对主键 [&#x27;acct_no&#x27;] 下 3 个字段</td></tr>
+    </tbody>
+  </table>
+
+  <h2>二、差异明细</h2>
+  <table>
+    <thead><tr><th>规则名</th><th>定位键</th><th>字段</th><th>源值</th><th>目标值</th><th>说明</th></tr></thead>
+    <tbody>
+<tr><td>记录数核对</td><td class='mono'>__汇总__</td><td>记录数</td><td class='mono'>9</td><td class='mono'>7</td><td>源表 9 行，目标表 7 行，相差 2 行</td></tr>
+<tr><td>主键唯一</td><td class='mono'>A0004</td><td>acct_no</td><td class='mono'>2</td><td class='mono'>1</td><td>主键 A0004 在表中重复出现 2 次</td></tr>
+<tr><td>非空校验</td><td class='mono'>A0006</td><td>cust_name</td><td class='mono'></td><td class='mono'></td><td>字段 cust_name 不能为空</td></tr>
+<tr><td>值域-账户状态</td><td class='mono'>A0003</td><td>status</td><td class='mono'>关注</td><td class='mono'>允许集合 [&#x27;正常&#x27;, &#x27;冻结&#x27;, &#x27;销户&#x27;]</td><td>status 取值 “关注” 不在 允许集合 [&#x27;正常&#x27;, &#x27;冻结&#x27;, &#x27;销户&#x27;]</td></tr>
+<tr><td>金额勾稽-期末余额</td><td class='mono'>A0005</td><td>ending_balance = beginning_balance + income - expense</td><td class='mono'>12000.0</td><td class='mono'>13000.0</td><td>勾稽不平：ending_balance=12000.0，beginning_balance + income - expense=13000.0，差额 -1000.0</td></tr>
+<tr><td>字段差异比对</td><td class='mono'>A0002</td><td>cust_name</td><td class='mono'>李娜</td><td class='mono'>李娜娜</td><td>字段 cust_name 不一致</td></tr>
+<tr><td>字段差异比对</td><td class='mono'>A0005</td><td>ending_balance</td><td class='mono'>13000.0</td><td class='mono'>12000.0</td><td>字段 ending_balance 不一致</td></tr>
+<tr><td>字段差异比对</td><td class='mono'>A0006</td><td>cust_name</td><td class='mono'>赵磊</td><td class='mono'></td><td>字段 cust_name 不一致</td></tr>
+<tr><td>字段差异比对</td><td class='mono'>A0008</td><td></td><td class='mono'>存在</td><td class='mono'>缺失</td><td>该记录仅在源表存在（目标报送缺失）</td></tr>
+    </tbody>
+  </table>
+
+  <footer>由 fin-audit 自动生成 · 仅用于数据稽核演示</footer>
+</div>
+</body>
+</html>

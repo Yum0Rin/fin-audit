@@ -1,0 +1,58 @@
+{
+  "source": "source.csv",
+  "target": "target.csv",
+  "report": {
+    "html": "../demo/report.html",
+    "csv": "../demo/diff_detail.csv"
+  },
+  "rules": [
+    {
+      "type": "record_count",
+      "name": "记录数核对"
+    },
+    {
+      "type": "key_unique",
+      "name": "主键唯一",
+      "table": "source",
+      "key": ["acct_no"]
+    },
+    {
+      "type": "not_null",
+      "name": "非空校验",
+      "table": "target",
+      "key": ["acct_no"],
+      "fields": ["acct_no", "cust_name", "ending_balance"]
+    },
+    {
+      "type": "value_range",
+      "name": "值域-币种",
+      "table": "target",
+      "key": ["acct_no"],
+      "field": "currency",
+      "allowed": ["CNY", "USD", "HKD"]
+    },
+    {
+      "type": "value_range",
+      "name": "值域-账户状态",
+      "table": "target",
+      "key": ["acct_no"],
+      "field": "status",
+      "allowed": ["正常", "冻结", "销户"]
+    },
+    {
+      "type": "reconcile",
+      "name": "金额勾稽-期末余额",
+      "scope": "row",
+      "table": "target",
+      "key": ["acct_no"],
+      "expr": "ending_balance = beginning_balance + income - expense",
+      "tol": 0.01
+    },
+    {
+      "type": "field_diff",
+      "name": "字段差异比对",
+      "key": ["acct_no"],
+      "fields": ["cust_name", "currency", "ending_balance"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+﻿规则名,规则类型,定位键,字段,源值,目标值,说明
+记录数核对,record_count,__汇总__,记录数,9,7,源表 9 行，目标表 7 行，相差 2 行
+主键唯一,key_unique,A0004,acct_no,2,1,主键 A0004 在表中重复出现 2 次
+非空校验,not_null,A0006,cust_name,,,字段 cust_name 不能为空
+值域-账户状态,value_range,A0003,status,关注,"允许集合 ['正常', '冻结', '销户']","status 取值 “关注” 不在 允许集合 ['正常', '冻结', '销户']"
+金额勾稽-期末余额,reconcile,A0005,ending_balance = beginning_balance + income - expense,12000.0,13000.0,勾稽不平：ending_balance=12000.0，beginning_balance + income - expense=13000.0，差额 -1000.0
+字段差异比对,field_diff,A0002,cust_name,李娜,李娜娜,字段 cust_name 不一致
+字段差异比对,field_diff,A0005,ending_balance,13000.0,12000.0,字段 ending_balance 不一致
+字段差异比对,field_diff,A0006,cust_name,赵磊,,字段 cust_name 不一致
+字段差异比对,field_diff,A0008,,存在,缺失,该记录仅在源表存在（目标报送缺失）

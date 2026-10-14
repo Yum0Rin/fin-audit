@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fin-audit"
+version = "0.1.0"
+description = "金融数据稽核/对账工具：按规则比对源数据与报送数据，输出 HTML + CSV 差异报告"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Yum0Rin" }]
+dependencies = ["pandas>=2.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+fin-audit = "fin_audit.cli:main"
+
+[tool.setuptools]
+packages = ["fin_audit"]
